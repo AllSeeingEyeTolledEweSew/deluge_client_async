@@ -46,10 +46,7 @@ def get_localhost_auth():
 
 def _decode_recursive(obj):
     if type(obj) is bytes:
-        try:
-            return obj.decode()
-        except UnicodeError:
-            return obj
+        return os.fsdecode(obj)
     if type(obj) is dict:
         return {_decode_recursive(k): _decode_recursive(v)
                 for k, v in obj.items()}
@@ -176,7 +173,10 @@ class Client(object):
             event_name, event_data = message[1:3]
             log().debug("RPC_EVENT: %s", event_name)
             for handler in self._event_to_handlers.get(event_name, ()):
-                self.loop.call_soon(handler, *event_data)
+                if asyncio.iscoroutinefunction(handler):
+                    self.loop.create_task(handler(*event_data))
+                else:
+                    self.loop.call_soon(handler, *event_data)
         elif msg_type in (RPC_RESPONSE, RPC_ERROR):
             request_id, result = message[1:3]
             if request_id not in self._id_to_request:
@@ -256,6 +256,10 @@ class Client(object):
 
     @asyncio.coroutine
     def register_event_handler_async(self, event_name, handler):
+        if self.decode:
+            event_name = os.fsdecode(event_name)
+        else:
+            event_name = os.fsencode(event_name)
         if event_name not in self._event_to_handlers:
             self._event_to_handlers[event_name] = []
             if self.protocol:
@@ -266,6 +270,10 @@ class Client(object):
 
     @asyncio.coroutine
     def deregister_event_handler_async(self, event_name, handler):
+        if self.decode:
+            event_name = os.fsdecode(event_name)
+        else:
+            event_name = os.fsencode(event_name)
         yield
         if event_name in self._event_to_handlers:
             if handler in self._event_to_handlers[event_name]:
