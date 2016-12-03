@@ -15,7 +15,7 @@ setup(
     long_description=documentation,
     author="AllSeeingEyeTolledEweSew",
     author_email="allseeingeyetolledewesew@protonmail.com",
-    license="ISC",
+    license="Unlicense",
     py_modules=["deluge_client_async"],
     url="http://github.com/allseeingeyetolledewesew/deluge_client_async",
 )
