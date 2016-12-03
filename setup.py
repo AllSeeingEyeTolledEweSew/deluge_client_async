@@ -18,4 +18,5 @@ setup(
     license="Unlicense",
     py_modules=["deluge_client_async"],
     url="http://github.com/allseeingeyetolledewesew/deluge_client_async",
+    python_requires=">=3.4"
 )
