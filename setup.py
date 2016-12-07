@@ -20,6 +20,7 @@ setup(
     url="http://github.com/allseeingeyetolledewesew/deluge_client_async",
     python_requires=">=3.4",
     install_requires=[
-        "rencode>=1.0.0"
+        "rencode>=1.0.0",
+        "pyxdg>=0.25",
     ]
 )
