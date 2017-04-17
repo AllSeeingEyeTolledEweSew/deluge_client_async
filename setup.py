@@ -8,7 +8,7 @@ with open("README") as readme:
     documentation = readme.read()
 
 setup(
-    name="deluge_client_async",
+    name="deluge-client-async",
     version="0.1.0",
 
     description="An asyncio client to deluge.",
